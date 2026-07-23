@@ -1,0 +1,48 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: idlc_cms_api
+    restart: always
+    ports:
+      - "${PORT:-4001}:4001"
+    environment:
+      NODE_ENV: production
+      PORT: 4001
+      API_PREFIX: api/v1
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USERNAME: ${DB_USERNAME:-cms}
+      DB_PASSWORD: ${DB_PASSWORD:-cms_pass}
+      DB_NAME: ${DB_NAME:-cms_db}
+      DB_SYNC: "true"
+      DB_LOGGING: "false"
+      UPLOAD_DIR: uploads/documents
+    volumes:
+      - ./uploads:/app/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:16-alpine
+    container_name: idlc_cms_db
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USERNAME:-cms}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-cms_pass}
+      POSTGRES_DB: ${DB_NAME:-cms_db}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-cms} -d ${DB_NAME:-cms_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:
+    driver: local

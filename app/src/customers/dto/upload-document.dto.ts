@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsOptional } from 'class-validator';
 import { DocumentType } from '../enums/document-type.enum';
 
 export class UploadDocumentDto {
@@ -9,5 +9,6 @@ export class UploadDocumentDto {
   type: DocumentType;
 
   @ApiProperty({ type: 'string', format: 'binary', description: 'Document file (JPEG, PNG, PDF up to 5MB)' })
-  file: any;
+  @IsOptional()
+  file?: any;
 }
