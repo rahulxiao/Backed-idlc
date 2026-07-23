@@ -1,14 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { CustomersModule } from '../customers/customers.module';
-import { Customer } from '../customers/entities/customer.entity';
-import { PhoneNumber } from '../customers/entities/phone-number.entity';
-import { Address } from '../customers/entities/address.entity';
-import { Document } from '../customers/entities/document.entity';
-import databaseConfig from '../config/database.config';
+import { CustomersModule } from './customers/customers.module';
+import { Customer } from './customers/entities/customer.entity';
+import { PhoneNumber } from './customers/entities/phone-number.entity';
+import { Address } from './customers/entities/address.entity';
+import { Document } from './customers/entities/document.entity';
+import databaseConfig from './config/database.config';
 
 @Module({
   imports: [
@@ -38,7 +37,7 @@ import databaseConfig from '../config/database.config';
 
     CustomersModule,
   ],
-  controllers: [AppController],
+  controllers: [],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

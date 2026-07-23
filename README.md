@@ -1,98 +1,278 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 🏢 Customer Management System — RESTful API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue.svg)](https://www.typescriptlang.org/)
+[![NestJS](https://img.shields.io/badge/NestJS-11.0-red.svg)](https://nestjs.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16.0-blue.svg)](https://www.postgresql.org/)
+[![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED.svg)](https://www.docker.com/)
+[![Swagger](https://img.shields.io/badge/Swagger-OpenAPI--3.0-green.svg)](https://swagger.io/)
+[![Scalar](https://img.shields.io/badge/Scalar-API--Reference-purple.svg)](https://scalar.com/)
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+> **Back-End API Development Challenge (Option 3)**  
+> A production-grade RESTful API built for a **Customer Management System (CMS)** featuring complete CRUD operations, multi-value field management (multiple mobile numbers, addresses), document storage (NID, Tax Certificate, Photo, Signature), paginated list filtering/sorting/search, structured error handling, and containerized Docker setup.
 
-## Description
+---
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 📑 Table of Contents
 
-## Project setup
+1. [Project Overview](#-project-overview)
+2. [Technology Stack](#-technology-stack)
+3. [Architecture & Design](#-architecture--design)
+4. [Database Schema](#-database-schema)
+5. [API Endpoints & Documentation](#-api-endpoints--documentation)
+6. [Quick Start & Running with Docker](#-quick-start--running-with-docker)
+7. [Local Development Setup](#-local-development-setup)
+8. [Validation & Error Handling](#-validation--error-handling)
+9. [AI Tools Usage Documentation](#-ai-tools-usage-documentation)
+10. [Assumptions](#-assumptions)
 
-```bash
-$ pnpm install
+---
+
+## 🚀 Project Overview
+
+The Customer Management System (CMS) REST API provides secure, reliable management of customer profiles and documents. It strictly adheres to standard REST conventions and NestJS layered architectural patterns (Controller → Service → Repository).
+
+### Key Features
+- 👤 **Complete Customer CRUD**: Create, read, partial update, and soft-delete customer profiles.
+- 📱 **Multi-Value Relations**: Support for multiple phone numbers (`primary`, `alternate`, `office`) and addresses (`present`, `permanent`, `mailing`).
+- 📁 **Document Management**: File upload API supporting NID, Tax Certificate, Photo, and Signature (JPEG, PNG, PDF up to 5MB) with local filesystem storage and database metadata tracking.
+- 🔍 **Advanced List Querying**: Search by customer name, filter by status (`active`, `inactive`, `blocked`), sort by custom fields, and page through results.
+- 🛡️ **Strict Input Validation**: Enforces unique checks on Email, Mobile Number, and National ID (NID), as well as business rules like non-future Date of Birth.
+- 📖 **Interactive API Documentation**: Live **Swagger UI** (`/api/docs`) and **Scalar API Reference** (`/api/scalar`).
+- 🐳 **One-Command Docker Deployment**: Ready to run anywhere using `docker compose up`.
+
+---
+
+## 🛠️ Technology Stack
+
+| Layer | Technology | Rationale |
+|---|---|---|
+| **Framework** | [NestJS v11](https://nestjs.com/) | Modular, decorator-based TypeScript framework enforcing clean architecture |
+| **Runtime** | [Node.js v20 LTS](https://nodejs.org/) / [Bun](https://bun.sh/) | High-performance asynchronous execution |
+| **Language** | [TypeScript v5.7](https://www.typescriptlang.org/) | Type safety, maintainability, and declarative decorator support |
+| **Database** | [PostgreSQL 16](https://www.postgresql.org/) | ACID-compliant relational database with strong constraint capabilities |
+| **ORM** | [TypeORM v1.1](https://typeorm.io/) | Repository pattern, relational mapping, and transactional support |
+| **Validation** | `class-validator` & `class-transformer` | Declarative DTO schema validation and payload stripping |
+| **Documentation** | `@nestjs/swagger` & `@scalar/nestjs-api-reference` | Auto-generated OpenAPI v3 UI and modern Scalar documentation |
+| **Containerization**| [Docker](https://www.docker.com/) & Docker Compose | Containerized application and database setup |
+
+---
+
+## 📐 Architecture & Design
+
+The solution follows a strict **Layered Architecture**:
+
+```
+┌──────────────────────────────────────────────────────────┐
+│                      HTTP Request                        │
+└────────────────────────────┬─────────────────────────────┘
+                             │
+┌────────────────────────────▼─────────────────────────────┐
+│                 Global Middleware & Pipes                │
+│  • ValidationPipe  • AllExceptionsFilter  • Interceptor  │
+└────────────────────────────┬─────────────────────────────┘
+                             │
+┌────────────────────────────▼─────────────────────────────┐
+│                     Controller Layer                     │
+│    CustomersController       │     DocumentsController   │
+└────────────────────────────┬─────────────────────────────┘
+                             │
+┌────────────────────────────▼─────────────────────────────┐
+│                      Service Layer                       │
+│    CustomersService          │     DocumentsService      │
+└────────────────────────────┬─────────────────────────────┘
+                             │
+┌────────────────────────────▼─────────────────────────────┐
+│                    Repository Layer                      │
+│    CustomersRepository       │     DocumentsRepository   │
+└────────────────────────────┬─────────────────────────────┘
+                             │
+┌────────────────────────────▼─────────────────────────────┐
+│                     PostgreSQL 16                        │
+└──────────────────────────────────────────────────────────┘
 ```
 
-## Compile and run the project
+---
 
-```bash
-# development
-$ pnpm run start
+## 🗄️ Database Schema
 
-# watch mode
-$ pnpm run start:dev
+The database consists of **4 relational tables**:
 
-# production mode
-$ pnpm run start:prod
+```
+┌──────────────────────────┐
+│        customers         │
+├──────────────────────────┤
+│ id           UUID PK     │
+│ name         VARCHAR(255)│
+│ email        VARCHAR UQ  │
+│ nid_number   VARCHAR UQ  │
+│ date_of_birth DATE       │
+│ status       ENUM        │
+│ created_at   TIMESTAMP   │
+│ updated_at   TIMESTAMP   │
+└────────────┬─────────────┘
+             │
+   ┌─────────┼──────────────────┐
+   │ 1       │ 1                │ 1
+   │ N       │ N                │ N
+┌──▼─────────┴───────┐  ┌───────▼──────────────┐  ┌▼──────────────────┐
+│   phone_numbers    │  │      addresses       │  │     documents     │
+├────────────────────┤  ├──────────────────────┤  ├───────────────────┤
+│ id        UUID PK  │  │ id        UUID PK    │  │ id       UUID PK  │
+│ customer_id FK     │  │ customer_id FK       │  │ customer_id FK    │
+│ number    VARCHAR  │  │ type      ENUM       │  │ type     ENUM     │
+│ type      ENUM     │  │ line1, line2 VARCHAR │  │ file_name VARCHAR │
+│ is_primary BOOLEAN │  │ city, state  VARCHAR │  │ file_path VARCHAR │
+└────────────────────┘  │ zip, country VARCHAR │  │ file_size INT     │
+                        └──────────────────────┘  │ mime_type VARCHAR │
+                                                  └───────────────────┘
 ```
 
-## Run tests
+---
 
-```bash
-# unit tests
-$ pnpm run test
+## 🌐 API Endpoints & Documentation
 
-# e2e tests
-$ pnpm run test:e2e
+### Customer Management
 
-# test coverage
-$ pnpm run test:cov
+| Method | Endpoint | Description | Status Codes |
+|---|---|---|---|
+| `POST` | `/api/v1/customers` | Create a new customer profile | `201`, `400`, `409` |
+| `GET` | `/api/v1/customers` | List customers (supports page, limit, search, status, sortBy, sortOrder) | `200`, `400` |
+| `GET` | `/api/v1/customers/:id` | Get customer details by UUID | `200`, `404` |
+| `PATCH` | `/api/v1/customers/:id` | Partially update customer profile | `200`, `400`, `404`, `409` |
+| `DELETE` | `/api/v1/customers/:id` | Soft delete customer (sets status to `inactive`) | `200`, `404` |
+
+### Document Management
+
+| Method | Endpoint | Description | Status Codes |
+|---|---|---|---|
+| `POST` | `/api/v1/customers/:customerId/documents` | Upload customer document (NID, Tax Cert, Photo, Signature) | `201`, `400`, `404` |
+| `GET` | `/api/v1/customers/:customerId/documents` | List uploaded document metadata for a customer | `200`, `404` |
+| `GET` | `/api/v1/customers/:customerId/documents/:docId` | Stream / Download document file | `200`, `404` |
+| `DELETE` | `/api/v1/customers/:customerId/documents/:docId` | Delete document file from disk & DB metadata | `200`, `404` |
+
+### Documentation Interactive UIs
+When the application is running, open your browser to access:
+- 📖 **Swagger UI**: `http://localhost:4001/api/docs`
+- 🎨 **Scalar API Reference**: `http://localhost:4001/api/scalar`
+
+---
+
+## 🐳 Quick Start & Running with Docker
+
+Running the application using **Docker Compose** requires **zero local software dependencies** (no Node.js or PostgreSQL needed on your machine).
+
+### Prerequisites
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and running.
+
+### Instructions
+
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/rahulxiao/Backed-idlc.git
+   cd Backed-idlc
+   ```
+
+2. **Copy Environment File**:
+   ```bash
+   cp .env.example .env
+   ```
+
+3. **Build and Run Containers**:
+   ```bash
+   docker compose up --build
+   ```
+
+4. **Verify Application**:
+   - API Base URL: `http://localhost:4001/api/v1`
+   - Swagger Documentation: `http://localhost:4001/api/docs`
+   - Scalar Documentation: `http://localhost:4001/api/scalar`
+
+5. **Stop Containers**:
+   ```bash
+   docker compose down
+   ```
+
+---
+
+## 💻 Local Development Setup
+
+If you prefer running the application directly on your workstation:
+
+### Prerequisites
+- Node.js (v20 LTS) or Bun (v1.1+)
+- PostgreSQL server running locally
+
+### Steps
+
+1. **Install Dependencies**:
+   ```bash
+   pnpm install
+   # or using bun
+   bun install
+   ```
+
+2. **Configure Environment Variables**:
+   Create a `.env` file from `.env.example` and update database credentials:
+   ```env
+   PORT=4001
+   API_PREFIX=api/v1
+   DB_HOST=localhost
+   DB_PORT=5432
+   DB_USERNAME=postgres
+   DB_PASSWORD=your_password
+   DB_NAME=cms_db
+   DB_SYNC=true
+   ```
+
+3. **Start Development Server**:
+   ```bash
+   pnpm run start:dev
+   # or
+   bun run start:dev
+   ```
+
+---
+
+## 🛡️ Validation & Error Handling
+
+### Validation Rules
+- **Customer Name**: Required, minimum 2 characters.
+- **Email Address**: Required, valid email format, unique in database.
+- **Mobile Number**: Required, unique in database.
+- **National ID (NID)**: Required, unique in database.
+- **Date of Birth**: Cannot be a future date (`@IsNotFutureDate()` custom constraint).
+- **Document Upload**: Allowed file extensions are `.jpg`, `.jpeg`, `.png`, `.pdf` up to a maximum size of `5 MB`.
+
+### Error Response Standard
+All API errors return a uniform structure:
+```json
+{
+  "success": false,
+  "statusCode": 409,
+  "message": "A record with this email already exists",
+  "error": "ConflictException",
+  "timestamp": "2026-07-23T20:00:00.000Z",
+  "path": "/api/v1/customers"
+}
 ```
 
-## Deployment
+---
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+## 🤖 AI Tools Usage Documentation
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### AI Tools Utilized
+- **Antigravity (Google DeepMind)**: Architecture planning, code generation, entity relational mapping, and OpenAPI documentation design.
 
-```bash
-$ pnpm install -g @nestjs/mau
-$ mau deploy
-```
+### How AI-Generated Code Was Verified
+1. **Manual Inspection**: Reviewed all generated DTO validation rules, TypeORM relation options, and HTTP status codes against challenge specifications.
+2. **Type Safety & Compilation**: Verified that the TypeScript compiler passed with zero errors (`npx nest build`).
+3. **Database Constraints Test**: Verified that duplicate `email`, `nidNumber`, and `phoneNumber` insertions were properly caught by the `AllExceptionsFilter` and returned HTTP `409 Conflict`.
+4. **Containerization Test**: Validated that `docker compose up --build` executed multi-stage builds cleanly and established container networking between Node.js and PostgreSQL 16.
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+---
 
-## Resources
+## 📌 Assumptions
 
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+1. **Soft Deletion**: Calling `DELETE /api/v1/customers/:id` updates customer status to `inactive` rather than hard deleting database rows to preserve audit history.
+2. **File Storage**: Uploaded files are stored in the `./uploads/documents` directory on local/container storage, while document metadata is stored in PostgreSQL.
+3. **Authentication**: Authentication/Authorization was omitted per project scope requirements to focus on back-end API architecture, CRUD capabilities, and document upload functionality.
