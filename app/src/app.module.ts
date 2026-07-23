@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppService } from './app.service';
 import { CustomersModule } from './customers/customers.module';
 import { Customer } from './customers/entities/customer.entity';
 import { PhoneNumber } from './customers/entities/phone-number.entity';
@@ -38,6 +37,6 @@ import databaseConfig from './config/database.config';
     CustomersModule,
   ],
   controllers: [],
-  providers: [AppService],
+  providers: [],
 })
 export class AppModule { }
